@@ -149,4 +149,4 @@ const isOpen: (s1: string) => boolean = (s1) => {
         false;
 }
 
-console.log(isPaired("This is {(some} (text)"));
+console.log(isPaired("This is {(some}) (text)"));
