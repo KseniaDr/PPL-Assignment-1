@@ -26,16 +26,29 @@ console.log(exports.countVowels("This is SOME Text"));
 /* Question 2 */
 //export const runLengthEncoding = undefined;
 const runLengthEncoding = (s) => {
-    //array of chars
-    //array of numbers
-    //combine
-    let c = 0;
-    return stringToArray(s).reduce((stringAns, curChar) => {
-        let counter = countCharacter(stringToArray(s).slice(c), curChar);
-        c = counter;
-        if (counter > 1)
-            return (stringAns + curChar + counter);
-        return (stringAns + curChar);
+    return stringToArray(s).reduce((acc, cur) => {
+        const index = acc.length;
+        if (index === 0) {
+            const counter = countCharacter(stringToArray(s), cur);
+            if (counter > 1) {
+                return acc + cur + countCharacter(stringToArray(s), cur); //a4
+            }
+            else {
+                return acc + cur;
+            }
+        }
+        else if (cur === acc[index - 2]) { //index min 2 
+            return acc;
+        }
+        else { //b s
+            const counter = countCharacter(stringToArray(s).slice(stringToArray(s).indexOf(cur, index)), cur);
+            if (counter > 1) {
+                return acc + cur + counter;
+            }
+            else {
+                return acc + cur;
+            }
+        }
     }, "");
 };
 exports.runLengthEncoding = runLengthEncoding;
@@ -43,7 +56,7 @@ const countCharacter = (arr, ch) => {
     let answer = 0;
     let bool = true;
     answer = arr.filter(x => (((count(x, ch) && bool) ? x : bool = false))).length;
-    console.log(ch + ":" + answer);
+    //console.log(ch + ":" +answer);
     return answer;
 };
 const count = (x, ch) => {
@@ -52,7 +65,7 @@ const count = (x, ch) => {
 // const findCharChange: (s: string[], ch: string) => number = (s, ch) => {
 //     s.reduce((acc,cur) => ())
 // }
-console.log(exports.runLengthEncoding("aaaabbbccdaa"));
+console.log(exports.runLengthEncoding("Aa"));
 const blhablha = (x, y) => {
     return 0;
 };
@@ -60,26 +73,25 @@ exports.blhablha = blhablha;
 /* Question 3 */
 //export const isPaired = undefined;
 const isPaired = (s) => {
-    let parenthesesArr = stringToArray(s).filter(x => (findParentheses(x))); // array of all Parentheses
-    let parToNumArr = parenthesesArr.map(x => checkParentheses(x)); // array of 1 & -1
-    let answer = true;
+    const parenthesesArr = stringToArray(s).filter(x => (findParentheses(x))); // array of all Parentheses
+    const parToNumArr = parenthesesArr.map(x => checkParentheses(x)); // array of 1 & -1
+    const answer = parenthesesArr.map((x, index) => {
+        if (isOpen(x)) { //arr go right
+            console.log("arr: " + parenthesesArr.slice(index));
+            return findMatch(parenthesesArr.slice(index), findPartner(x));
+        }
+        else { //arr go left
+            console.log("arr: " + parenthesesArr.slice(0, index));
+            return findMatch(parenthesesArr.slice(0, index), findPartner(x));
+        }
+    });
+    console.log(answer);
     console.log("arr of parentheses: [" + parenthesesArr + "]");
     console.log("arr of 1 & -1: [" + parToNumArr + "]");
-    // let boolArr = parToNumArr.reduce((acc,cur) => ,0);
-    // parToNumArr.reduce((acc,cur) => 
-    //     {
-    //         let curSum = true;
-    //         ((acc + cur) < 0) ? answer = curSum && true: 
-    //         answer = curSum && false;
-    //         //return curSum;
-    //     }
-    // ,0);
-    return answer;
-    //(acc + checkParentheses(cur)) < 0) ? false: true,0)
-    //stringToArray(s).filter(x => (findParentheses(x))).every()
+    const numOfPar = parenthesesArr.length;
+    return (answer.every(x => (x === true)) && (parenthesesArr.length % 2 === 0));
 };
 exports.isPaired = isPaired;
-//console.log(isPaired("This is ([some]) {text}")); 
 const findParentheses = (s) => {
     return (s === "[") ? true :
         (s === "]") ? true :
@@ -98,17 +110,20 @@ const checkParentheses = (s) => {
                         (s === ")") ? -1 :
                             0;
 };
-const closeParentheses = (s) => {
-    return (s === "]") ? -1 :
-        (s === "}") ? -1 :
-            (s === ")") ? -1 :
-                0;
+const findMatch = (arr, s1) => {
+    return arr.indexOf(s1) !== -1;
 };
-const openParentheses = (s) => {
-    return (s === "[") ? 1 :
-        (s === "{") ? 1 :
-            (s === "(") ? 1 :
-                0;
+const findPartner = (s1) => {
+    return (s1 === '(') ? ')' :
+        (s1 === ')') ? '(' :
+            (s1 === '[') ? ']' :
+                (s1 === ']') ? '[' :
+                    (s1 === '{') ? '}' :
+                        '{';
 };
-exports.isPaired("This is ([some]) {text}");
+const isOpen = (s1) => {
+    return ((s1 === '(') || (s1 === '[') || (s1 === '{')) ? true :
+        false;
+};
+console.log(exports.isPaired("This is {(some} (text)"));
 //# sourceMappingURL=part2.js.map
