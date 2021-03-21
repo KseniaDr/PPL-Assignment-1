@@ -56,8 +56,7 @@ export const isPaired: (s:string) => boolean = (s) => {
             else
                 return {str:prevVal.str.slice(0,prevVal.str.length-1),flag:false};
         }
-    },{str:"",flag:true});
-    console.log(finalAnswer);    
+    },{str:"",flag:true});  
     return (finalAnswer.flag && finalAnswer.str.length===0);
 }
 
@@ -70,5 +69,3 @@ const findParentheses: (s:string) => boolean = (s) =>{
        (s === ")") ? true: 
        false;
 }
-
-console.log(isPaired("This is {(some}) (text)"));
